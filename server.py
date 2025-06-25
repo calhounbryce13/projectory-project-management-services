@@ -8,14 +8,14 @@ from flask import Flask, request
 from flask_cors import CORS
 import requests
 import model
-import json
+
 
 
 
 
 PORT = 5000
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["http://127.0.0.1:5500"])
+CORS(app, supports_credentials=True, origins=["https://calhounbryce13.github.io"])
 
 
 def validate_request(email, title, index, mark):
