@@ -8,12 +8,10 @@ from flask import Flask, request
 from flask_cors import CORS
 import requests
 import model
+import os
 
 
 
-
-
-PORT = 5000
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=["https://calhounbryce13.github.io"])
 
@@ -37,7 +35,6 @@ def delete_project_after_completion(userEmail, projectName):
             "project-type": "current",
             "project-name": projectName
     }
-
     try:
         deleteProjectResponse = requests.delete('http://127.0.0.1:8000/deletion', headers=headers, json=data)
         return True
@@ -80,4 +77,4 @@ def call_model_to_complete_project():
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=PORT)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
