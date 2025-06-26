@@ -5,11 +5,12 @@ Author: Bryce Calhoun
 """
 
 from mongoengine import *
+import os
 import config
 
 
 
-connect(host=config.data['MONGODB_CONNECTION_STRING'])
+connect(host=os.getenv('MONGODB_CONNECTION_STRING'))
 
 
 
