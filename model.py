@@ -6,7 +6,6 @@ Author: Bryce Calhoun
 
 from mongoengine import *
 import os
-import config
 
 
 
