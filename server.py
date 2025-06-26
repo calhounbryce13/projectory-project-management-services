@@ -11,7 +11,7 @@ import os
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "https://calhounbryce13.github.io"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "https://calhounbryce13.github.io"}}, methods=['POST', 'PUT', 'OPTIONS'])
 
 
 def validate_request(email, title, index, mark):
