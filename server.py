@@ -1,15 +1,13 @@
 """
-Description: Microservice controller file for Projectory main program, uses another microservice for deletion
+Description: project management service controller file for Projectory main program, uses data removal service for deletion.
 Author: Bryce Calhoun
 """
-
 
 from flask import Flask, request
 from flask_cors import CORS
 import requests
 import model
 import os
-
 
 
 app = Flask(__name__)
@@ -24,7 +22,6 @@ def validate_request(email, title, index, mark):
                     if(isinstance(mark, int)):
                         return True
     return False
-
 
 def delete_project_after_completion(userEmail, projectName):
     headers = {
@@ -42,7 +39,7 @@ def delete_project_after_completion(userEmail, projectName):
         return False
 
 
-@app.route('/task-manager', methods=['POST'])
+@app.route('/task-manager', methods=['POST', 'OPTIONS'])
 def call_model_to_mark_task():
     try:
         userEmail, projectTitle, taskIndex, mark = (request.json).values()
@@ -57,9 +54,7 @@ def call_model_to_mark_task():
         
     return "Error, Invalid request", 400
 
-
-
-@app.route('/completed-project-manager', methods=['PUT'])
+@app.route('/completed-project-manager', methods=['PUT', 'OPTIONS'])
 def call_model_to_complete_project():
     print("endpoint reached")
 
@@ -72,8 +67,6 @@ def call_model_to_complete_project():
         if(deleted):
             return "success", 200
     return "fail", 500
-
-
 
 
 if __name__ == "__main__":
