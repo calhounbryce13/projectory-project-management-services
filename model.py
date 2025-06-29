@@ -9,7 +9,7 @@ import os
 
 
 
-connect(host=os.getenv('MONGODB_CONNECTION_STRING'))
+connect(host=os.getenv('MONGODB_CONNECT_STRING'))
 
 
 
