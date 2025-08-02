@@ -41,7 +41,7 @@ def delete_project_after_completion(userEmail, projectName):
             "project-name": projectName
     }
     try:
-        deleteProjectResponse = requests.delete('https://projectory-del-services-a3df6b550989.herokuapp.com/deletion', headers=headers, json=data)
+        deleteProjectResponse = requests.delete('https://projectory-data-removal-services.onrender.com/deletion', headers=headers, json=data)
         return True
     except Exception:
         return False
