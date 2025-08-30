@@ -49,6 +49,14 @@ def delete_project_after_completion(userEmail, projectName):
 
 @app.route('/server-status', methods=['GET'])
 def respond():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers["Access-Control-Allow-Origin"] = "https://calhounbryce13.github.io"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.status_code = 200
+        return response
     return "OK", 200
 
 @app.route('/task-manager', methods=['POST', 'OPTIONS'])
