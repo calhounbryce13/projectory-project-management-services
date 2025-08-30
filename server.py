@@ -47,6 +47,10 @@ def delete_project_after_completion(userEmail, projectName):
         return False
 
 
+@app.route('/server-status', methods=['GET'])
+def respond():
+    return "OK", 200
+
 @app.route('/task-manager', methods=['POST', 'OPTIONS'])
 def call_model_to_mark_task():
     if request.method == 'OPTIONS':
