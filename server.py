@@ -78,6 +78,7 @@ def call_model_to_update_a_title():
         response = preflight_configuration("PUT, OPTIONS")
         return response
     body = request.json
+    print("\nINCOMING REQUEST: ", body)
     if body.get('user') and body.get('category') and body.get('old-title') and body.get('new-title'):
         if valid_category(body.get('category')):
             if body.get('old-title') != body.get('new-title'):
