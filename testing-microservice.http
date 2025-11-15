@@ -26,3 +26,14 @@ Content-Type: application/json
 
 
 ###
+
+
+PUT http://127.0.0.1:5000/title-update
+Content-Type: application/json
+
+{
+    "user": "calhounbryce13@gmail.com",
+    "category": "current",
+    "old-title": "website aethetics",
+    "new-title": "website aesthetics"
+}

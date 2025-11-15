@@ -21,7 +21,6 @@ CORS(app, supports_credentials=True, resources={r"/*":
                                                 "allow_headers": ["Content-Type"]
                                                 }})
 
-
 def validate_request(email, title, index, mark):
     if(email is not None and title is not None and index is not None and mark is not None):
         if(isinstance(email, str)):
@@ -46,28 +45,58 @@ def delete_project_after_completion(userEmail, projectName):
     except Exception:
         return False
 
-
-@app.route('/server-status', methods=['GET'])
-def respond():
-    if request.method == 'OPTIONS':
+def preflight_configuration(allowed_methods):
         response = make_response()
         response.headers["Access-Control-Allow-Origin"] = "https://calhounbryce13.github.io"
-        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Access-Control-Allow-Methods"] = allowed_methods
         response.headers["Access-Control-Allow-Headers"] = "Content-Type"
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.status_code = 200
         return response
+
+def valid_category(category):
+    categories = ['current','planned','complete']
+    if category.lower() in categories:
+        return True
+    return False
+
+######################################################################
+######################################################################
+
+@app.route('/server-status', methods=['GET'])
+def respond():
+    if request.method == 'OPTIONS':
+        response = preflight_configuration("GET, OPTIONS")
+        return response
     return "OK", 200
+
+
+
+@app.route('/title-update', methods=['PUT', 'OPTIONS'])
+def call_model_to_update_a_title():
+    if request.method == 'OPTIONS':
+        response = preflight_configuration("PUT, OPTIONS")
+        return response
+    body = request.json
+    if body.get('user') and body.get('category') and body.get('old-title') and body.get('new-title'):
+        if valid_category(body.get('category')):
+            if body.get('old-title') != body.get('new-title'):
+                status = model.update_project_title(body.get('user'), body.get('category'), body.get('old-title'), body.get('new-title'))
+                if status == 0:
+                    return "success", 200
+                elif status == 1:
+                    return "error: invalid user email", 400
+                elif status == 2:
+                    return "error: old title not found", 400
+            return "error: new title must be different from old", 400
+        return "error: invalid category", 400
+    return "error: invalid request", 400
+
 
 @app.route('/task-manager', methods=['POST', 'OPTIONS'])
 def call_model_to_mark_task():
     if request.method == 'OPTIONS':
-        response = make_response()
-        response.headers["Access-Control-Allow-Origin"] = "https://calhounbryce13.github.io"
-        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.status_code = 200
+        response = preflight_configuration("POST, OPTIONS")
         return response
     try:
         userEmail, projectTitle, taskIndex, mark = (request.json).values()
@@ -86,17 +115,10 @@ def call_model_to_mark_task():
 def call_model_to_complete_project():
     print("endpoint reached")
     if request.method == 'OPTIONS':
-        response = make_response()
-        response.headers["Access-Control-Allow-Origin"] = "https://calhounbryce13.github.io"
-        response.headers["Access-Control-Allow-Methods"] = "PUT, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.status_code = 200
+        response = preflight_configuration("PUT, OPTIONS")
         return response
-
-
+    
     userEmail, projectTitle = (request.json).values()
-
     result = model.mark_project_complete(userEmail=userEmail, projectTitle=projectTitle)
     if(result):
         deleted = delete_project_after_completion(userEmail=userEmail, projectName=projectTitle)

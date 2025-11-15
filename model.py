@@ -5,11 +5,12 @@ Author: Bryce Calhoun
 """
 
 from mongoengine import *
+#import config
 import os
 
 
-
 connect(host=os.getenv('MONGODB_CONNECT_STRING'))
+#connect(host=config.data['MONGODB_CONNECTION_STRING'])
 
 
 
@@ -18,7 +19,6 @@ class Task(EmbeddedDocument):
 
     task_description = StringField()
     is_complete = IntField()
-
 
 
 
@@ -63,13 +63,11 @@ def mark_project_complete(userEmail, projectTitle):
             if(currentProject.title == projectTitle):
                 goal = currentProject.goal
                 break
-        print("abacus")
         user.complete.append(Complete(title=projectTitle, goal=goal))
         user.save()
         return True
     return False
 
-    
 
 
 def mark_project_task(UserEmail, projectTitle, taskIndex, mark):
@@ -93,3 +91,20 @@ def mark_project_task(UserEmail, projectTitle, taskIndex, mark):
         return True
     return False
     
+
+def update_project_title(email, category, old, new):
+    user = User.objects(email=email).first()
+    if user:
+        projects = user.current
+        found = False
+        for project in projects:
+            if project.title == old:
+                project.title = new
+                found = True
+                break
+        if found:
+            user.current = projects
+            user.save()
+            return 0
+        return 2
+    return 1
