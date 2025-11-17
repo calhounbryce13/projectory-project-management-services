@@ -95,7 +95,7 @@ def mark_project_task(UserEmail, projectTitle, taskIndex, mark):
 def update_project_title(email, category, old, new):
     user = User.objects(email=email).first()
     if user:
-        projects = user.current
+        projects = user[category]
         found = False
         for project in projects:
             if project.title == old:
@@ -103,8 +103,27 @@ def update_project_title(email, category, old, new):
                 found = True
                 break
         if found:
-            user.current = projects
+            user[category] = projects
             user.save()
             return 0
         return 2
     return 1
+
+
+def update_project_goal(name, category, title, goal):
+    user = User.objects(email=name).first()
+    if user:
+        projects = user[category]
+        found = False
+        for project in projects:
+            if project.title == title:
+                project.goal = goal
+                found = True
+                break
+        if found:
+            user[category] = projects
+            user.save()
+            return 0
+        return 2
+    return 1
+

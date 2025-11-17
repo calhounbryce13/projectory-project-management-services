@@ -128,5 +128,24 @@ def call_model_to_complete_project():
     return "fail", 500
 
 
+@app.route('/goal-update', methods=['PUT', 'OPTIONS'])
+def call_model_to_update_a_goal():
+    if request.method == 'OPTIONS':
+        response = preflight_configuration("PUT, OPTIONS")
+        return response
+    body = request.json
+    if body.get('user') and body.get('category') and body.get('title') and body.get('new-goal'):
+        if valid_category(body.get('category')):
+            status = model.update_project_goal(body.get('user'), body.get('category'), body.get('title'), body.get('new-goal'))
+            if status == 0:
+                return "success", 200
+            elif status == 1:
+                return "error: invalid user", 400
+            elif status == 2:
+                return "error: invalid title", 400 
+    return "error: invalid body", 400
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))

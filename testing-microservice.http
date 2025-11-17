@@ -37,3 +37,14 @@ Content-Type: application/json
     "old-title": "website aethetics",
     "new-title": "website aesthetics"
 }
+###
+
+PUT http://127.0.0.1:5000/goal-update 
+Content-Type: application/json
+
+{
+    "user": "calhounbryce13@gmail.com",
+    "category": "current",
+    "title": "Projectory alt colors",
+    "new-goal": "Change the yellow buttons to a cool dark alternative"
+}
