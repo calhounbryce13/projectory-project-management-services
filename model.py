@@ -31,6 +31,8 @@ class Planned(EmbeddedDocument):
     meta = {"strict": False}
 
     title = StringField()
+    goal = StringField()
+
 
 
 
@@ -67,7 +69,6 @@ def mark_project_complete(userEmail, projectTitle):
         user.save()
         return True
     return False
-
 
 
 def mark_project_task(UserEmail, projectTitle, taskIndex, mark):
